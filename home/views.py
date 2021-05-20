@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 import random
-from datetime import datetime
 
 # Create your views here.
 
@@ -24,7 +23,7 @@ def reset(request):
     return redirect('/')
 
 
-def process_gold(request):
+def getGold(request):
     if request.method == 'GET':
         return redirect('/')
 
@@ -33,17 +32,16 @@ def process_gold(request):
     building_name_upper = building_name[0].upper() + building_name[1:]
 
     curr_gold = random.randint(building[0], building[1])
-    now_formatted = datetime.now().strftime("%m/%d/%Y %l:%M%p")
     result = 'earn'
-    message = f"Earned {cur_gold} from the {building_name_upper}! ({now_formatted})"
+    message = f"Earned {curr_gold} from the {building_name_upper}!"
 
     if building_name == 'casino':
         if random.randint(0, 1) > 0:
-            message = f"Entered a {building_name_upper} and lost {curr_gold} golds...Ouch.. ({now_formatted})"
+            message = f"Entered a {building_name_upper} and lost {curr_gold} gold...Ouch.. "
             curr_gold = curr_gold * -1
             result = 'lose'
 
     request.session['gold'] += curr_gold
     request.session['activities'].append(
         {"message": message, "result": result})
-    return redirection('/')
+    return redirect('/')
